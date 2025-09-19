@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Navbar = () => {
+const Navbar = ({ onNavigate }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -22,12 +22,18 @@ const Navbar = () => {
             </span>
           </div>
           <div className="hidden md:flex space-x-2">
-            <a href="/dashboard" className="px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-0.5">
+            <button
+              onClick={() => onNavigate('dashboard')}
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-0.5"
+            >
               Dashboard
-            </a>
-            <a href="/vote" className="px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-0.5">
+            </button>
+            <button
+              onClick={() => onNavigate('vote')}
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-0.5"
+            >
               Vote
-            </a>
+            </button>
             <a href="/results" className="px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-0.5">
               Results
             </a>

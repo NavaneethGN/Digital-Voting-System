@@ -10,20 +10,24 @@ function App() {
   // This is a simple router state. In a real app, you'd use React Router
   const [currentPage, setCurrentPage] = useState('login')
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case 'login':
-        return <Login />
+        return <Login onLoginSuccess={() => handlePageChange('dashboard')} />
       case 'register':
-        return <Register />
+        return <Register onRegisterSuccess={() => handlePageChange('login')} />
       case 'dashboard':
-        return <Dashboard />
+        return <Dashboard onNavigate={handlePageChange} />
       case 'vote':
-        return <VotingInterface />
+        return <VotingInterface onNavigate={handlePageChange} />
       case 'results':
-        return <Results />
+        return <Results onNavigate={handlePageChange} />
       default:
-        return <Login />
+        return <Login onLoginSuccess={() => handlePageChange('dashboard')} />
     }
   }
 
@@ -33,5 +37,6 @@ function App() {
     </div>
   )
 }
+
 
 export default App
