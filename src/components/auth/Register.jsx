@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
-const Register = () => {
+const Register = ({ onRegisterSuccess, onNavigate }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -11,10 +12,11 @@ const Register = () => {
   const [step, setStep] = useState(1);
 
   useEffect(() => {
-    // Add floating particles to background
     const createParticles = () => {
       const container = document.querySelector('.register-container');
       if (!container) return;
+      
+      container.querySelectorAll('.bg-emerald-400').forEach((p) => p.remove());
       
       for (let i = 0; i < 20; i++) {
         const particle = document.createElement('div');
@@ -41,11 +43,10 @@ const Register = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate registration process
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Handle registration logic here
     setIsLoading(false);
+    onRegisterSuccess();
   };
 
   const nextStep = () => {
@@ -57,38 +58,67 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center register-container bg-gradient-to-br from-[#10B981] via-[#0F172A] to-[#0F172A] overflow-hidden relative">
-      {/* Animated background elements */}
+    <div className="min-h-screen flex items-center justify-center register-container bg-gradient-to-br from-[#0d281c] via-[#132a3d] to-[#0F172A] overflow-hidden relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/10"></div>
       
-      <div className="bg-white/10 backdrop-blur-xl p-8 rounded-2xl shadow-2xl w-96 border border-white/20 relative z-10 transform transition-all duration-500 hover:scale-[1.02]">
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="bg-white/10 backdrop-blur-xl p-8 rounded-2xl shadow-2xl w-96 border border-white/20 relative z-10"
+      >
         <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-gradient-to-r from-[#10B981] to-[#0F172A] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg pulse-glow">
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+            className="w-16 h-16 bg-gradient-to-r from-[#10B981] to-[#0F172A] rounded-full flex items-center justify-center mx-auto mb-4 pulse-glow"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
             </svg>
-          </div>
-          <h2 className="text-3xl font-bold text-white mb-2">Create Account</h2>
-          <p className="text-white/70">Join our voting platform</p>
+          </motion.div>
+          <motion.h2 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-3xl font-bold text-white mb-2"
+          >
+            Create Account
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-white/70"
+          >
+            Join our voting platform
+          </motion.p>
         </div>
 
-        {/* Progress bar */}
         <div className="mb-6">
           <div className="flex justify-between mb-2">
             <span className="text-xs text-white/70">Step {step} of 2</span>
             <span className="text-xs text-white/70">{step * 50}%</span>
           </div>
           <div className="w-full bg-white/20 rounded-full h-2">
-            <div 
-              className="bg-gradient-to-r from-[#10B981] to-[#0F172A] h-2 rounded-full transition-all duration-500" 
-              style={{ width: `${step * 50}%` }}
-            ></div>
+            <motion.div 
+              className="bg-gradient-to-r from-[#10B981] to-[#0F172A] h-2 rounded-full"
+              initial={{ width: "0%" }}
+              animate={{ width: `${step * 50}%` }}
+              transition={{ duration: 0.5 }}
+            ></motion.div>
           </div>
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           {step === 1 && (
-            <div className="space-y-6 animate-fadeIn">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              className="space-y-6"
+            >
               <div className="form-group">
                 <label htmlFor="name" className="block text-sm font-medium text-white/80 mb-2">
                   Full Name
@@ -134,11 +164,16 @@ const Register = () => {
                   />
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
           
           {step === 2 && (
-            <div className="space-y-6 animate-fadeIn">
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
               <div className="form-group">
                 <label htmlFor="voterId" className="block text-sm font-medium text-white/80 mb-2">
                   Voter ID
@@ -184,38 +219,44 @@ const Register = () => {
                   />
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
           
           <div className="flex justify-between">
             {step > 1 && (
-              <button
+              <motion.button
                 type="button"
                 onClick={prevStep}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 className="px-6 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-all duration-300 flex items-center"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
                 Back
-              </button>
+              </motion.button>
             )}
             
             {step < 2 ? (
-              <button
+              <motion.button
                 type="button"
                 onClick={nextStep}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 className="ml-auto px-6 py-3 bg-gradient-to-r from-[#10B981] to-[#0F172A] text-white rounded-xl hover:from-[#0da271] hover:to-[#0d1324] transition-all duration-300 flex items-center"
               >
                 Next
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
-              </button>
+              </motion.button>
             ) : (
-              <button
+              <motion.button
                 type="submit"
                 disabled={isLoading}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 className="ml-auto px-6 py-3 bg-gradient-to-r from-[#10B981] to-[#0F172A] text-white rounded-xl hover:from-[#0da271] hover:to-[#0d1324] transition-all duration-300 flex items-center"
               >
                 {isLoading ? (
@@ -231,20 +272,28 @@ const Register = () => {
                     </svg>
                   </>
                 )}
-              </button>
+              </motion.button>
             )}
           </div>
         </form>
         
-        <div className="mt-8 text-center">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mt-8 text-center"
+        >
           <p className="text-white/70 text-sm">
             Already have an account?{' '}
-            <a href="#" className="text-[#10B981] font-semibold hover:text-[#0da271] transition-colors">
+            <button 
+              onClick={() => onNavigate('login')}
+              className="text-[#10B981] font-semibold hover:text-[#0da271] transition-colors"
+            >
               Sign in
-            </a>
+            </button>
           </p>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
